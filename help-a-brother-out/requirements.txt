@@ -1,2 +1,2 @@
-/opt/render/project/src/app.py
-Flask==2.2.5
+gunicorn app:app
+pip install -r requirements.txt
