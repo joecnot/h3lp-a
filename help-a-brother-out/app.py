@@ -1,4 +1,5 @@
-/opt/render/project/src/app.py
+gunicorn app:app
+pip install -r requirements.txt
 from flask import Flask, render_template, request, redirect, url_for, jsonify, g, abort
 import sqlite3
 from datetime import datetime
