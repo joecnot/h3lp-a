@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Reported replies (admin)</h3>
+{% if rows %}
+{% for r in rows %}
+<div class="card mb-2">
+<div class="card-body">
+<h6>On post: <a href="{{ url_for('view_post', post_id=r['post_id']) }}">{{ r['post_title'] }}</a></h6>
+<p>{{ r['body'] }}</p>
+<div class="small-muted">By {{ r['name'] if r['name'] else 'Anonymous' }} • {{ r['created_at'] }}</div>
+</div>
+</div>
+{% endfor %}
+{% else %}
+<p>No reported replies.</p>
+{% endif %}
+{% endblock %}
