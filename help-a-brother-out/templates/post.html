@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+<div class="col-md-8">
+<div class="card mb-3">
+<div class="card-body">
+<h4>{{ post['title'] }}</h4>
+<p class="text-muted">{{ post['name'] if post['name'] else 'Anonymous' }} • {{ post['created_at'] }}</p>
+<p>{{ post['body'] }}</p>
+</div>
+</div>
+
+<h5>Replies</h5>
+<div id="replies">
+{% for r in replies %}
+<div class="card reply" id="reply-{{ r['id'] }}">
+<div class="card-body">
+<p class="mb-1">{{ r['body'] }}</p>
+<div class="small-muted">
+{{ r['name'] if r['name'] else 'Anonymous' }} • {{ r['created_at'] }}
+• <span id="upvotes-{{ r['id'] }}">{{ r['upvotes'] }}</span> upvotes
+• <a href="#" onclick="upvote({{ r['id'] }}); return false;">Upvote</a>
+• <a href="#" onclick="report({{ r['id'] }}); return false;">Report</a>
+</div>
+</div>
+</div>
+{% else %}
+<p>No replies yet. Be the first to help.</p>
+{% endfor %}
+</div>
+
+<h5 class="mt-4">Leave a reply</h5>
+<form method="post" action="{{ url_for('reply', post_id=post['id']) }}">
+<div class="mb-2">
+<label class="form-label">Name (optional)</label>
+<input name="name" class="form-control" placeholder="Your name or leave blank">
+</div>
+<div class="mb-2">
+<label class="form-label">Message</label>
+<textarea name="body" class="form-control" rows="4" required></textarea>
+</div>
+<button class="btn btn-success">Reply</button>
+</form>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function upvote(id){
+const res = await fetch(`/api/reply/${id}/upvote`, {method:'POST'});
+if (!res.ok) { alert('Something went wrong'); return; }
+const j = await res.json();
+document.getElementById('upvotes-'+id).innerText = j.upvotes;
+}
+async function report(id){
+if (!confirm('Report this reply for moderation?')) return;
+const res = await fetch(`/api/reply/${id}/report`, {method:'POST'});
+if (!res.ok) { alert('Failed to report'); return; }
+alert('Reported. Moderators will review it.');
+}
+</script>
+{% endblock %}
