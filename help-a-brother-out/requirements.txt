@@ -1,4 +1,1 @@
-app.py
-requirements.txt
-/templates/index.html
-/static/
+Flask==2.2.5
